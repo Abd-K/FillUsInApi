@@ -1,0 +1,29 @@
+server:
+  servlet:
+    context-path: /fillUsIn/api
+  port: 8080
+
+spring:
+  profiles:
+    active: local
+    datasource:
+      url: jdbc:mysql://localhost:3306/fillUsIn?useSSL=false
+      username: root
+      password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        jdbc.batch_size: 30
+        database-platform: org.hibernate.dialect.MySQL55Dialect
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        format_sql: true
+logging:
+  level:
+    web: info
+springdoc:
+  api-docs:
+    path: /swagger/api-docs
+  swagger-ui:
+    path: /swagger/swagger-ui.html
