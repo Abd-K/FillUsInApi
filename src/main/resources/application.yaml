@@ -6,10 +6,10 @@ server:
 spring:
   profiles:
     active: local
-    datasource:
-      url: jdbc:mysql://localhost:3306/fillUsIn?useSSL=false
-      username: root
-      password:
+  datasource:
+    url: jdbc:mysql://localhost:3306/fillUsIn?useSSL=false
+    username: root
+    password:
   jpa:
     hibernate:
       ddl-auto: update
@@ -19,9 +19,12 @@ spring:
         database-platform: org.hibernate.dialect.MySQL55Dialect
         driver-class-name: com.mysql.cj.jdbc.Driver
         format_sql: true
+  liquibase:
+    change-log: classpath:db/db.changelog-master.xml
 logging:
   level:
     web: info
+
 springdoc:
   api-docs:
     path: /swagger/api-docs
