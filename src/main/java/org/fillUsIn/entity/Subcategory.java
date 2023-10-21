@@ -24,7 +24,7 @@ public class Subcategory {
   @Column(nullable = false, unique = true)
   private String name;
 
-  @OneToMany
+  @OneToMany(mappedBy = "subcategory")
   private List<Post> posts = new ArrayList<>();
 
   @ManyToOne

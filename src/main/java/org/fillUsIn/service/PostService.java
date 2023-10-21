@@ -35,7 +35,7 @@ public class PostService {
   }
 
   public List<Post> getPostsBySubcategory(String subCategoryName) {
-    final Subcategory subcategory = subCategoryRepository.findById(subCategoryName)
+    final Subcategory subcategory = subCategoryRepository.findByNameIgnoreCase(subCategoryName)
             .orElseThrow(() -> new EntityNotFoundException("Subcategory not found with id: " + subCategoryName));
 
     return subcategory.getPosts();

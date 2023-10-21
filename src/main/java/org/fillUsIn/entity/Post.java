@@ -1,5 +1,6 @@
 package org.fillUsIn.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,7 @@ public class Post {
   private String username;
 
   @ManyToOne
+  @JsonIgnore
   @JoinColumn(nullable = false)
   private Subcategory subcategory;
 }
