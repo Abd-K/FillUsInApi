@@ -7,8 +7,11 @@ import org.fillUsIn.entity.Subcategory;
 import org.fillUsIn.repository.PostRepository;
 import org.fillUsIn.repository.SubCategoryRepository;
 import org.springframework.stereotype.Service;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -23,6 +26,17 @@ public class PostService {
     this.subCategoryRepository = subCategoryRepository;
   }
 
+  public String ExtractThumbnail(String url)
+  {
+    Document doc = null;
+    try {
+      doc = Jsoup.connect(url).get();
+      return doc.select("meta[property=og:image]").attr("content");
+
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
   public Post createPost(String subCategoryName, CreatePostDto createPostDto) {
     final Subcategory subcategory = subCategoryRepository.findById(subCategoryName)
             .orElseThrow(() -> new EntityNotFoundException("Subcategory not found with id: " + subCategoryName));
@@ -31,6 +45,9 @@ public class PostService {
     post.setTitle(createPostDto.getTitle());
     post.setBody(createPostDto.getBody());
     post.setUsername(createPostDto.getUsername());
+    String url = createPostDto.getUrl();
+    post.setUrl(url);
+    post.setThumbnailUrl(ExtractThumbnail(url));
     return postRepository.save(post);
   }
 

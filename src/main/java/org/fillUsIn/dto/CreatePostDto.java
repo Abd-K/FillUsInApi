@@ -8,9 +8,11 @@ public class CreatePostDto {
 
   @NonNull
   private String title;
-  @NonNull
+
   private String body;
   @NonNull
   private String username; //STUBBED
+
+  private String url;
 
 }

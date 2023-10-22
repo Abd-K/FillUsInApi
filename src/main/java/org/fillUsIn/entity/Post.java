@@ -28,6 +28,9 @@ public class Post {
 
   private String username;
 
+  private String url;
+  private String thumbnailUrl;
+
   @ManyToOne
   @JsonIgnore
   @JoinColumn(nullable = false)
