@@ -9,7 +9,6 @@ import org.fillUsIn.repository.CategoryRepository;
 import org.fillUsIn.repository.PostRepository;
 import org.fillUsIn.repository.SubCategoryRepository;
 import org.springframework.stereotype.Service;
-
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.Comparator;
