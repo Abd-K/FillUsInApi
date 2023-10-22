@@ -10,6 +10,7 @@ import org.fillUsIn.repository.PostRepository;
 import org.fillUsIn.repository.SubCategoryRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
@@ -51,10 +52,15 @@ public class PostService {
     Document doc;
     try {
       doc = Jsoup.connect(url).get();
-      return doc.select("meta[property=og:image]").attr("content");
+      final Elements elements = doc.select("meta[property=og:image]");
+      if(elements.hasAttr("content")) {
+        return elements.attr("content");
+      } else {
+        return null;
+      }
 
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      return null;
     }
   }
 
