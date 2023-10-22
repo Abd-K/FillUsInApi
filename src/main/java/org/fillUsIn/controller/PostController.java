@@ -36,7 +36,7 @@ public class PostController {
   @GetMapping("/category/{categoryName}")
   @ResponseStatus(HttpStatus.ACCEPTED)
   public List<Post> getPostsByCategory(@PathVariable String categoryName) {
-    return postService.getPostsByCategory(categoryName);
+    return postService.getPostsByParentCategory(categoryName);
   }
   @GetMapping("/subcategory/{subCategoryName}")
   @ResponseStatus(HttpStatus.ACCEPTED)

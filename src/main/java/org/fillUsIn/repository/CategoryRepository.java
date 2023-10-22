@@ -11,10 +11,5 @@ import java.util.Optional;
 
 public interface CategoryRepository extends JpaRepository<Category, String> {
   Optional<Category> findByNameIgnoreCase(String name);
-  @Query("SELECT DISTINCT p FROM Category c " +
-          "JOIN c.subcategories sc " +
-          "JOIN sc.posts p " +
-          "WHERE LOWER(c.name) = LOWER(:categoryName)")
-  List<Post> findPostsFromSubcategoriesInCategory(@Param("categoryName") String categoryName);
 
 }

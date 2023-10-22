@@ -11,6 +11,7 @@ import org.fillUsIn.repository.SubCategoryRepository;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -45,12 +46,17 @@ public class PostService {
     return subcategory.getPosts();
   }
 
-  public List<Post> getPostsByCategory(String categoryName) {
-    final Category category = categoryRepository.findByNameIgnoreCase(categoryName)
-            .orElseThrow(() -> new EntityNotFoundException("Subcategory not found with id: " + categoryName));
-//get all the posts from a subcategory
-    List<Post> posts = categoryRepository.getPosts(categoryName);
-    return category.getPosts();
+  public List<Post> getPostsByParentCategory(String parentCategoryName) {
+    final Category parentCategory = categoryRepository.findByNameIgnoreCase(parentCategoryName)
+            .orElseThrow(() -> new EntityNotFoundException("Parent category not found with name: " + parentCategoryName));
+
+    List<Post> allPosts = new ArrayList<>();
+
+    for (Subcategory subcategory : parentCategory.getSubcategories()) {
+      allPosts.addAll(subcategory.getPosts());
+    }
+
+    return allPosts;
   }
 
   public Post getPostById(String postId) {
