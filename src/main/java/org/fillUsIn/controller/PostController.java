@@ -44,4 +44,16 @@ public class PostController {
   public Post getPost(@PathVariable String postId) {
     return postService.getPostById(postId);
   }
+
+  @PostMapping ("/{postId}/like")
+  @ResponseStatus(HttpStatus.ACCEPTED)
+  public Post likePost(@PathVariable String postId) {
+    return postService.likePost(postId);
+  }
+
+  @PostMapping ("/{postId}/dislike")
+  @ResponseStatus(HttpStatus.ACCEPTED)
+  public Post dislikePost(@PathVariable String postId) {
+    return postService.dislikePost(postId);
+  }
 }

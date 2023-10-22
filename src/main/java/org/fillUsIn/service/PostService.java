@@ -45,4 +45,20 @@ public class PostService {
     return postRepository.findById(postId)
             .orElseThrow(() -> new EntityNotFoundException("Post not found with id: " + postId));
   }
+
+  public Post likePost(String postId) {
+    Post post = postRepository.findById(postId) .orElseThrow(() -> new EntityNotFoundException("Post not found with id: " + postId));
+
+    post.setLikes(post.getLikes()+1);
+    postRepository.saveAndFlush(post);
+    return post;
+  }
+
+  public Post dislikePost(String postId) {
+    Post post = postRepository.findById(postId) .orElseThrow(() -> new EntityNotFoundException("Post not found with id: " + postId));
+
+    post.setLikes(post.getLikes()-1);
+    postRepository.saveAndFlush(post);
+    return post;
+  }
 }
