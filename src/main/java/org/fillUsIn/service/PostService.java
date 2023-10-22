@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -56,6 +57,7 @@ public class PostService {
       allPosts.addAll(subcategory.getPosts());
     }
 
+    allPosts.sort(Comparator.comparing(Post::getLikes).reversed());
     return allPosts;
   }
 
