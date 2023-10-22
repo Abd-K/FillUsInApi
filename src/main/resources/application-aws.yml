@@ -1,0 +1,25 @@
+server:
+  port: 5000
+
+spring:
+  application:
+    name: fillUsIn
+  datasource:
+    url: jdbc:mysql://${RDS_HOSTNAME}:${RDS_PORT}/${RDS_DB_NAME}
+    username: ${RDS_USERNAME}
+    password: ${RDS_PASSWORD}
+    initialization-mode: always
+  hikari: #https://cljdoc.org/d/hikari-cp/hikari-cp/2.13.0/doc/readme
+    minimumIdle: 10
+  jpa:
+    hibernate.ddl-auto: update
+    generate-ddl: true
+    show-sql: false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+
+management:
+  health:
+    db:
+      enabled=false:
+logging.level.org.springframework.web: INFO
