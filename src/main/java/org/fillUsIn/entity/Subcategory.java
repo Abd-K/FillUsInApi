@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class Subcategory {
   private String name;
 
   @OneToMany(mappedBy = "subcategory")
+  @OrderBy("voteCount DESC")
   private List<Post> posts = new ArrayList<>();
 
   @ManyToOne

@@ -11,6 +11,8 @@ import org.fillUsIn.repository.SubCategoryRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
@@ -23,13 +25,20 @@ import java.util.List;
 public class PostService {
 
   private final PostRepository postRepository;
+  private final SubCategoryService subCategoryService;
   private final SubCategoryRepository subCategoryRepository;
-  private final CategoryRepository categoryRepository;
+  private final CategoryService categoryService;
 
-  public PostService(PostRepository postRepository, SubCategoryRepository subCategoryRepository, CategoryRepository categoryRepository) {
+  public PostService(PostRepository postRepository, SubCategoryService subCategoryService, SubCategoryRepository subCategoryRepository, CategoryService categoryService) {
     this.postRepository = postRepository;
+    this.subCategoryService = subCategoryService;
     this.subCategoryRepository = subCategoryRepository;
-    this.categoryRepository = categoryRepository;
+    this.categoryService = categoryService;
+  }
+
+  public Post getPostById(String postId) {
+    return postRepository.findById(postId)
+            .orElseThrow(() -> new EntityNotFoundException("Post not found with id: " + postId));
   }
 
   public Post createPost(String subCategoryName, CreatePostDto createPostDto) {
@@ -46,9 +55,7 @@ public class PostService {
     return postRepository.save(post);
   }
 
-
-  private String ExtractThumbnail(String url)
-  {
+  private String ExtractThumbnail(String url) {
     Document doc;
     try {
       doc = Jsoup.connect(url).get();
@@ -64,16 +71,14 @@ public class PostService {
     }
   }
 
-  public List<Post> getPostsBySubcategory(String subCategoryName) {
-    final Subcategory subcategory = subCategoryRepository.findByNameIgnoreCase(subCategoryName)
-            .orElseThrow(() -> new EntityNotFoundException("Subcategory not found with id: " + subCategoryName));
-
-    return subcategory.getPosts();
+  public Page<Post> getPostsBySubcategory(String subCategoryName, int page, int size) {
+    Subcategory subcategory = subCategoryService.getSubcategory(subCategoryName);
+    PageRequest pageRequest = PageRequest.of(page, size);
+    return postRepository.findBySubcategoryOrderByVoteCountDesc(subcategory, pageRequest);
   }
 
   public List<Post> getPostsByParentCategory(String parentCategoryName) {
-    final Category parentCategory = categoryRepository.findByNameIgnoreCase(parentCategoryName)
-            .orElseThrow(() -> new EntityNotFoundException("Parent category not found with name: " + parentCategoryName));
+    final Category parentCategory = categoryService.getCategory(parentCategoryName);
 
     List<Post> allPosts = new ArrayList<>();
 
@@ -85,13 +90,8 @@ public class PostService {
     return allPosts;
   }
 
-  public Post getPostById(String postId) {
-    return postRepository.findById(postId)
-            .orElseThrow(() -> new EntityNotFoundException("Post not found with id: " + postId));
-  }
-
   public Post likePost(String postId) {
-    Post post = postRepository.findById(postId) .orElseThrow(() -> new EntityNotFoundException("Post not found with id: " + postId));
+    Post post = getPostById(postId);
 
     post.setVoteCount(post.getVoteCount()+1);
     postRepository.saveAndFlush(post);
@@ -99,7 +99,7 @@ public class PostService {
   }
 
   public Post dislikePost(String postId) {
-    Post post = postRepository.findById(postId) .orElseThrow(() -> new EntityNotFoundException("Post not found with id: " + postId));
+    Post post = getPostById(postId);
     post.setVoteCount(post.getVoteCount() - 1);
     postRepository.saveAndFlush(post);
     return post;

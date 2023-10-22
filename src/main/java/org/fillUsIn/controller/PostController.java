@@ -4,13 +4,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.fillUsIn.dto.CreatePostDto;
 import org.fillUsIn.entity.Post;
 import org.fillUsIn.service.PostService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,7 +30,7 @@ public class PostController {
     this.postService = postService;
   }
 
-  @PostMapping ("/subcategory/{subCategoryName}")
+  @PostMapping("/subcategory/{subCategoryName}")
   @ResponseStatus(HttpStatus.CREATED)
   public Post createPost(@PathVariable String subCategoryName, @Validated @RequestBody CreatePostDto createPostDto) {
     return postService.createPost(subCategoryName, createPostDto);
@@ -38,25 +41,29 @@ public class PostController {
   public List<Post> getPostsByCategory(@PathVariable String categoryName) {
     return postService.getPostsByParentCategory(categoryName);
   }
+
   @GetMapping("/subcategory/{subCategoryName}")
-  @ResponseStatus(HttpStatus.ACCEPTED)
-  public List<Post> getPostsBySubCategory(@PathVariable String subCategoryName) {
-    return postService.getPostsBySubcategory(subCategoryName);
+  public ResponseEntity<Page<Post>> getPostsBySubCategory(@PathVariable String subCategoryName,
+                                                          @RequestParam(name = "page", defaultValue = "0") int page,
+                                                          @RequestParam(name = "size", defaultValue = "10") int size) {
+
+    Page<Post> posts = postService.getPostsBySubcategory(subCategoryName, page, size);
+    return new ResponseEntity<>(posts, HttpStatus.ACCEPTED);
   }
 
-  @GetMapping ("/{postId}")
+  @GetMapping("/{postId}")
   @ResponseStatus(HttpStatus.ACCEPTED)
   public Post getPost(@PathVariable String postId) {
     return postService.getPostById(postId);
   }
 
-  @PostMapping ("/{postId}/like")
+  @PostMapping("/{postId}/like")
   @ResponseStatus(HttpStatus.ACCEPTED)
   public Post likePost(@PathVariable String postId) {
     return postService.likePost(postId);
   }
 
-  @PostMapping ("/{postId}/dislike")
+  @PostMapping("/{postId}/dislike")
   @ResponseStatus(HttpStatus.ACCEPTED)
   public Post dislikePost(@PathVariable String postId) {
     return postService.dislikePost(postId);

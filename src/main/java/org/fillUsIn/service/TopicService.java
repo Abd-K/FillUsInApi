@@ -13,7 +13,6 @@ import java.util.List;
 @Slf4j
 public class TopicService {
 
-
   private final TopicRepository topicRepository;
   private final PostService postService;
 
@@ -27,7 +26,6 @@ public class TopicService {
     topic.setTitle(createTopicDto.getTitle());
     for (String postId : createTopicDto.getPostIds()) {
       Post post = postService.getPostById(postId);
-
       post.getTopics().add(topic);
       topic.getPosts().add(post);
     }
@@ -36,7 +34,7 @@ public class TopicService {
     return topic;
   }
 
-  //Performance bottleneck
+  //Performance bottleneck if we make query on all calls
   public List<Topic> getTopics() {
     return topicRepository.findAll();
   }

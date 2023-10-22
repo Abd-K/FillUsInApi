@@ -38,5 +38,4 @@ public class TopicController {
   public Topic createTopic(@Validated @RequestBody CreateTopicDto createTopicDto) {
     return topicService.createTopic(createTopicDto);
   }
-
 }
