@@ -33,9 +33,14 @@ public class PostController {
     return postService.createPost(subCategoryName, createPostDto);
   }
 
+  @GetMapping("/category/{categoryName}")
+  @ResponseStatus(HttpStatus.ACCEPTED)
+  public List<Post> getPostsByCategory(@PathVariable String categoryName) {
+    return postService.getPostsByParentCategory(categoryName);
+  }
   @GetMapping("/subcategory/{subCategoryName}")
   @ResponseStatus(HttpStatus.ACCEPTED)
-  public List<Post> getPosts(@PathVariable String subCategoryName) {
+  public List<Post> getPostsBySubCategory(@PathVariable String subCategoryName) {
     return postService.getPostsBySubcategory(subCategoryName);
   }
 
