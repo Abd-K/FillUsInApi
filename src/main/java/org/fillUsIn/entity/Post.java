@@ -42,6 +42,8 @@ public class Post {
   @JsonIgnore
   @JoinColumn(nullable = false)
   private Subcategory subcategory;
+  private String url;
+  private String thumbnailUrl;
 
   @ManyToMany
   @JsonIgnore

@@ -8,8 +8,11 @@ import org.fillUsIn.entity.Subcategory;
 import org.fillUsIn.repository.CategoryRepository;
 import org.fillUsIn.repository.PostRepository;
 import org.fillUsIn.repository.SubCategoryRepository;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -35,8 +38,24 @@ public class PostService {
     post.setSubcategory(subcategory);
     post.setTitle(createPostDto.getTitle());
     post.setBody(createPostDto.getBody());
+    String url = createPostDto.getUrl();
+    post.setUrl(url);
+    post.setThumbnailUrl(ExtractThumbnail(url));
     post.setUsername(createPostDto.getUsername());
     return postRepository.save(post);
+  }
+
+
+  private String ExtractThumbnail(String url)
+  {
+    Document doc;
+    try {
+      doc = Jsoup.connect(url).get();
+      return doc.select("meta[property=og:image]").attr("content");
+
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public List<Post> getPostsBySubcategory(String subCategoryName) {
@@ -56,7 +75,7 @@ public class PostService {
       allPosts.addAll(subcategory.getPosts());
     }
 
-    allPosts.sort(Comparator.comparing(Post::getLikes).reversed());
+    allPosts.sort(Comparator.comparing(Post::getVoteCount).reversed());
     return allPosts;
   }
 
