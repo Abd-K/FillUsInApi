@@ -2,8 +2,10 @@ package org.fillUsIn.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.fillUsIn.dto.CreatePostDto;
+import org.fillUsIn.entity.Category;
 import org.fillUsIn.entity.Post;
 import org.fillUsIn.entity.Subcategory;
+import org.fillUsIn.repository.CategoryRepository;
 import org.fillUsIn.repository.PostRepository;
 import org.fillUsIn.repository.SubCategoryRepository;
 import org.springframework.stereotype.Service;
@@ -17,10 +19,12 @@ public class PostService {
 
   private final PostRepository postRepository;
   private final SubCategoryRepository subCategoryRepository;
+  private final CategoryRepository categoryRepository;
 
-  public PostService(PostRepository postRepository, SubCategoryRepository subCategoryRepository) {
+  public PostService(PostRepository postRepository, SubCategoryRepository subCategoryRepository, CategoryRepository categoryRepository) {
     this.postRepository = postRepository;
     this.subCategoryRepository = subCategoryRepository;
+    this.categoryRepository = categoryRepository;
   }
 
   public Post createPost(String subCategoryName, CreatePostDto createPostDto) {
@@ -39,6 +43,14 @@ public class PostService {
             .orElseThrow(() -> new EntityNotFoundException("Subcategory not found with id: " + subCategoryName));
 
     return subcategory.getPosts();
+  }
+
+  public List<Post> getPostsByCategory(String categoryName) {
+    final Category category = categoryRepository.findByNameIgnoreCase(categoryName)
+            .orElseThrow(() -> new EntityNotFoundException("Subcategory not found with id: " + categoryName));
+//get all the posts from a subcategory
+    List<Post> posts = categoryRepository.getPosts(categoryName);
+    return category.getPosts();
   }
 
   public Post getPostById(String postId) {
