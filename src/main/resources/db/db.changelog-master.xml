@@ -69,5 +69,4 @@
             <column name="name" value="USA"/>
         </insert>
     </changeSet>
-
 </databaseChangeLog>
