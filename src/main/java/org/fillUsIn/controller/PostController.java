@@ -38,8 +38,11 @@ public class PostController {
 
   @GetMapping("/category/{categoryName}")
   @ResponseStatus(HttpStatus.ACCEPTED)
-  public List<Post> getPostsByCategory(@PathVariable String categoryName) {
-    return postService.getPostsByParentCategory(categoryName);
+  public ResponseEntity<Page<Post>> getPostsByCategory(@PathVariable String categoryName,
+                                                       @RequestParam(name = "page", defaultValue = "0") int page,
+                                                       @RequestParam(name = "size", defaultValue = "10") int size) {
+    Page<Post> posts = postService.getPostsByCategory(categoryName, page, size);
+    return new ResponseEntity<>(posts, HttpStatus.ACCEPTED);
   }
 
   @GetMapping("/subcategory/{subCategoryName}")
