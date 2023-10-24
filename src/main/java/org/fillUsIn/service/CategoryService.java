@@ -20,7 +20,7 @@ public class CategoryService {
   }
 
   public List<Category> getCategories() {
-    return categoryRepository.findAll();
+    return categoryRepository.findAllOrderedBySequence();
   }
 
   public Category getCategory(String categoryName) {

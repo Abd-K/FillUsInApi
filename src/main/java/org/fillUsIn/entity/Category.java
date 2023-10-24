@@ -26,6 +26,8 @@ public class Category {
   @Column(nullable = false, unique = true)
   private String name;
 
+  private int sequence;
+
   @OneToMany(mappedBy = "category",
           cascade = {MERGE, DETACH, REFRESH, REMOVE})
   private List<Subcategory> subcategories = new ArrayList<>();
