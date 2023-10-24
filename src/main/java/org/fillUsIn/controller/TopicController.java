@@ -3,6 +3,7 @@ package org.fillUsIn.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.fillUsIn.dto.CreateTopicDto;
+import org.fillUsIn.dto.TopicWithTopPostsDto;
 import org.fillUsIn.entity.Topic;
 import org.fillUsIn.service.TopicService;
 import org.springframework.http.HttpStatus;
@@ -29,8 +30,8 @@ public class TopicController {
 
   @GetMapping()
   @ResponseStatus(HttpStatus.ACCEPTED)
-  public List<Topic> getTopics() {
-    return topicService.getTopics();
+  public List<TopicWithTopPostsDto> getTopics() {
+    return topicService.getAllTopicsWithTopPosts();
   }
 
   @PostMapping()

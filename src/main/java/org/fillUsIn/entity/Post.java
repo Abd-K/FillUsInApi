@@ -56,4 +56,5 @@ public class Post {
           inverseJoinColumns = @JoinColumn(name = "topic_id")
   )
   private List<Topic> topics;
+
 }

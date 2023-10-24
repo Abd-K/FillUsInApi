@@ -27,5 +27,9 @@ public class Topic {
   private String title;
 
   @ManyToMany(mappedBy = "topics")
-  private List<Post> posts = new ArrayList<>();
+  private List<Subcategory> subcategories = new ArrayList<>();
+
+  @ManyToMany(mappedBy = "topics")
+  private List<Post> pickedPosts = new ArrayList<>();
+
 }

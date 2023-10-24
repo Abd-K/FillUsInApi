@@ -11,6 +11,8 @@ public class CreateTopicDto {
   @NonNull
   private String title;
   @NonNull
-  private List<String> postIds;
+  private List<String> pickedPostIds;
+  @NonNull
+  private List<String> subcategoryNamesTopPick;
 
 }
