@@ -5,9 +5,7 @@ import org.fillUsIn.dto.CreatePostDto;
 import org.fillUsIn.entity.Category;
 import org.fillUsIn.entity.Post;
 import org.fillUsIn.entity.Subcategory;
-import org.fillUsIn.repository.CategoryRepository;
 import org.fillUsIn.repository.PostRepository;
-import org.fillUsIn.repository.SubCategoryRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -16,9 +14,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 
 @Service
 @Slf4j
@@ -26,13 +21,11 @@ public class PostService {
 
   private final PostRepository postRepository;
   private final SubCategoryService subCategoryService;
-  private final SubCategoryRepository subCategoryRepository;
   private final CategoryService categoryService;
 
-  public PostService(PostRepository postRepository, SubCategoryService subCategoryService, SubCategoryRepository subCategoryRepository, CategoryService categoryService) {
+  public PostService(PostRepository postRepository, SubCategoryService subCategoryService, CategoryService categoryService) {
     this.postRepository = postRepository;
     this.subCategoryService = subCategoryService;
-    this.subCategoryRepository = subCategoryRepository;
     this.categoryService = categoryService;
   }
 
@@ -42,8 +35,7 @@ public class PostService {
   }
 
   public Post createPost(String subCategoryName, CreatePostDto createPostDto) {
-    final Subcategory subcategory = subCategoryRepository.findById(subCategoryName)
-            .orElseThrow(() -> new EntityNotFoundException("Subcategory not found with id: " + subCategoryName));
+    final Subcategory subcategory = subCategoryService.getSubcategory(subCategoryName);
     Post post = new Post();
     post.setSubcategory(subcategory);
     post.setTitle(createPostDto.getTitle());

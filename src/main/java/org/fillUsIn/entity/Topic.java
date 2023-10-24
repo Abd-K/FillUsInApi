@@ -13,6 +13,10 @@ import javax.persistence.ManyToMany;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.REFRESH;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -26,10 +30,12 @@ public class Topic {
   @Column(nullable = false)
   private String title;
 
-  @ManyToMany(mappedBy = "topics")
+  @ManyToMany(mappedBy = "topics",
+          cascade = {MERGE, DETACH, REFRESH})
   private List<Subcategory> subcategories = new ArrayList<>();
 
-  @ManyToMany(mappedBy = "topics")
+  @ManyToMany(mappedBy = "topics",
+          cascade = {MERGE, DETACH, REFRESH})
   private List<Post> pickedPosts = new ArrayList<>();
 
 }
