@@ -5,12 +5,15 @@ import org.fillUsIn.dto.CreatePostDto;
 import org.fillUsIn.entity.Category;
 import org.fillUsIn.entity.Post;
 import org.fillUsIn.entity.Subcategory;
+import org.fillUsIn.entity.User;
 import org.fillUsIn.repository.PostRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
@@ -22,11 +25,13 @@ public class PostService {
   private final PostRepository postRepository;
   private final SubCategoryService subCategoryService;
   private final CategoryService categoryService;
+  private final UserService userService;
 
-  public PostService(PostRepository postRepository, SubCategoryService subCategoryService, CategoryService categoryService) {
+  public PostService(PostRepository postRepository, SubCategoryService subCategoryService, CategoryService categoryService, UserService userService) {
     this.postRepository = postRepository;
     this.subCategoryService = subCategoryService;
     this.categoryService = categoryService;
+    this.userService = userService;
   }
 
   public Post getPostById(String postId) {
@@ -76,17 +81,38 @@ public class PostService {
   }
 
   public Post likePost(String postId) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String currentUsername = authentication.getName(); // This will give you the username
+
+    User currentUser = userService.getUser(currentUsername);
     Post post = getPostById(postId);
 
-    post.setVoteCount(post.getVoteCount()+1);
+    if (!post.getUserLikes().contains(currentUser)) {
+      post.getUserLikes().add(currentUser);
+      post.getUserDislikes().remove(currentUser);
+      post.setVoteCount(calculateVoteCount(post));
+    }
     postRepository.saveAndFlush(post);
     return post;
   }
 
   public Post dislikePost(String postId) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String currentUsername = authentication.getName(); // This will give you the username
+    User currentUser = userService.getUser(currentUsername);
+
     Post post = getPostById(postId);
-    post.setVoteCount(post.getVoteCount() - 1);
+    if (!post.getUserDislikes().contains(currentUser)) {
+      post.getUserDislikes().add(currentUser);
+      post.getUserLikes().remove(currentUser);
+      post.setVoteCount(calculateVoteCount(post));
+    }
+
     postRepository.saveAndFlush(post);
     return post;
+  }
+
+  private int calculateVoteCount(Post post) {
+    return post.getUserLikes().size() - post.getUserDislikes().size();
   }
 }

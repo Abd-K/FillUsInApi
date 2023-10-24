@@ -10,7 +10,14 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.REFRESH;
 
 @Entity
 @Data
@@ -33,4 +40,14 @@ public class User {
   @Column(name = "password")
   @JsonIgnore
   private String password;
+
+  @ManyToMany(mappedBy = "userLikes",
+          cascade = {MERGE, DETACH, REFRESH})
+  @JsonIgnore
+  private List<Post> postLikes = new ArrayList<>();
+
+  @ManyToMany(mappedBy = "userDislikes",
+          cascade = {MERGE, DETACH, REFRESH})
+  @JsonIgnore
+  private List<Post> postDislikes = new ArrayList<>();
 }

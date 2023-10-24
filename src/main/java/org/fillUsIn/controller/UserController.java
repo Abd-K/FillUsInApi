@@ -25,9 +25,9 @@ public class UserController {
     this.userService = userService;
   }
 
-  @GetMapping("")
+  @PostMapping("/login")
   @ResponseStatus(HttpStatus.ACCEPTED)
-  public ResponseEntity<User> login(@RequestBody LoginDto loginDto) throws Exception {
+  public ResponseEntity<User> login(@Validated @RequestBody LoginDto loginDto) throws Exception {
     User user = userService.login(loginDto);
     return new ResponseEntity<>(user, HttpStatus.ACCEPTED);
   }

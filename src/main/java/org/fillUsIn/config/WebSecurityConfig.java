@@ -51,10 +51,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     return source;
   }
 
-
   @Override
   public void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.userDetailsService(userService);
+    auth.authenticationProvider(daoAuthenticationProvider());
   }
 
   @Bean

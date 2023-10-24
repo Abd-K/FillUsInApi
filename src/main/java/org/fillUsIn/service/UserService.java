@@ -8,6 +8,8 @@ import org.fillUsIn.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -35,9 +38,7 @@ public class UserService implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     User user = getUser(username);
-    return org.springframework.security.core.userdetails.User.withUsername(user.getUsername())
-            .password(user.getPassword())
-            .build();
+    return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), new ArrayList<>());
   }
 
   public User createUser(CreateUserDto createUserDto) throws Exception {
@@ -47,15 +48,22 @@ public class UserService implements UserDetailsService {
       User newUser = new User();
       newUser.setUsername(createUserDto.getUsername());
       newUser.setPassword(passwordEncoder.encode(createUserDto.getPassword()));
+
+      authenticateUser(newUser.getUsername(), newUser.getPassword());
+
       return userRepository.save(newUser);
     }
   }
 
+  private void authenticateUser(String newUser, String newUser1) {
+    Authentication authenticatedToken = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(newUser, newUser1));
+    SecurityContextHolder.getContext().setAuthentication(authenticatedToken);
+  }
+
   public User login(LoginDto loginDto) throws Exception {
     try {
-      authenticationManager.authenticate(
-              new UsernamePasswordAuthenticationToken(
-                      loginDto.getUsername(), loginDto.getPassword()));
+      authenticateUser(loginDto.getUsername(), loginDto.getPassword());
+
     } catch (BadCredentialsException e) {
       throw new Exception("Username or password incorrect");
     }
@@ -66,7 +74,7 @@ public class UserService implements UserDetailsService {
     return getByUsername(username).isPresent();
   }
 
-  private User getUser(String username) {
+  public User getUser(String username) {
     return getByUsername(username)
             .orElseThrow(() -> new EntityNotFoundException("User not found with username: " + username));
   }

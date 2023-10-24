@@ -62,4 +62,19 @@ public class Post {
   )
   private List<Topic> topics;
 
+  @ManyToMany
+  @JoinTable(
+          name = "post_userlikes",
+          joinColumns = @JoinColumn(name = "post_id"),
+          inverseJoinColumns = @JoinColumn(name = "username")
+  )
+  private List<User> userLikes;
+
+  @ManyToMany
+  @JoinTable(
+          name = "post_userdislikes",
+          joinColumns = @JoinColumn(name = "post_id"),
+          inverseJoinColumns = @JoinColumn(name = "username")
+  )
+  private List<User> userDislikes;
 }
