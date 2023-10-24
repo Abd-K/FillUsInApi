@@ -1,14 +1,15 @@
 package org.fillUsIn.dto;
 
 import lombok.Getter;
-import lombok.NonNull;
+
+import javax.validation.constraints.NotNull;
 
 @Getter
 public class CreatePostDto {
 
-  @NonNull
+  @NotNull
   private String title;
-  @NonNull
+  @NotNull
   private String username; //STUBBED
   private String body;
   private String url;

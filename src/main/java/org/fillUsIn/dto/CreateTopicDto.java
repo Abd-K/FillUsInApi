@@ -1,18 +1,18 @@
 package org.fillUsIn.dto;
 
 import lombok.Getter;
-import lombok.NonNull;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
 public class CreateTopicDto {
 
-  @NonNull
+  @NotNull
   private String title;
-  @NonNull
+  @NotNull
   private List<String> pickedPostIds;
-  @NonNull
+  @NotNull
   private List<String> subcategoryNamesTopPick;
 
 }
