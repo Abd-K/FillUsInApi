@@ -39,6 +39,10 @@
             <column name="name" value="Charities"/>
             <column name="sequence" valueNumeric="3"/>
         </insert>
+        <insert tableName="category">
+            <column name="name" value="News"/>
+            <column name="sequence" valueNumeric="4"/>
+        </insert>
     </changeSet>
 
     <changeSet id="4" author="abdul khaled">
@@ -48,11 +52,51 @@
         </insert>
         <insert tableName="subcategory">
             <column name="category_name" value="Tools"/>
+            <column name="name" value="General tools"/>
+        </insert>
+        <insert tableName="subcategory">
+            <column name="category_name" value="Tools"/>
             <column name="name" value="BDS"/>
+        </insert>
+        <insert tableName="subcategory">
+            <column name="category_name" value="Tools"/>
+            <column name="name" value="Fact check"/>
+        </insert>
+        <insert tableName="subcategory">
+            <column name="category_name" value="News"/>
+            <column name="name" value="Fake news"/>
+        </insert>
+        <insert tableName="subcategory">
+            <column name="category_name" value="News"/>
+            <column name="name" value="Journalism"/>
+        </insert>
+        <insert tableName="subcategory">
+            <column name="category_name" value="News"/>
+            <column name="name" value="New"/>
+        </insert>
+        <insert tableName="subcategory">
+            <column name="category_name" value="News"/>
+            <column name="name" value="General news"/>
+        </insert>
+        <insert tableName="subcategory">
+            <column name="category_name" value="News"/>
+            <column name="name" value="Discussions"/>
+        </insert>
+        <insert tableName="subcategory">
+            <column name="category_name" value="News"/>
+            <column name="name" value="Counter arguments"/>
+        </insert>
+        <insert tableName="subcategory">
+            <column name="category_name" value="Education"/>
+            <column name="name" value="General Education"/>
         </insert>
         <insert tableName="subcategory">
             <column name="category_name" value="Education"/>
             <column name="name" value="Videos"/>
+        </insert>
+        <insert tableName="subcategory">
+            <column name="category_name" value="Education"/>
+            <column name="name" value="Books"/>
         </insert>
         <insert tableName="subcategory">
             <column name="category_name" value="Education"/>
@@ -65,6 +109,10 @@
         <insert tableName="subcategory">
             <column name="category_name" value="Education"/>
             <column name="name" value="Podcasts"/>
+        </insert>
+        <insert tableName="subcategory">
+            <column name="category_name" value="Charities"/>
+            <column name="name" value="General charities"/>
         </insert>
         <insert tableName="subcategory">
             <column name="category_name" value="Charities"/>
