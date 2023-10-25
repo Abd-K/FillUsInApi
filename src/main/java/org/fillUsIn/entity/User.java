@@ -9,8 +9,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,10 +46,20 @@ public class User {
   @JsonIgnore
   private String password;
 
+  @OneToMany(
+          mappedBy = "user",
+          cascade = {MERGE, REFRESH},
+          fetch = FetchType.LAZY)
+  @OrderBy("voteCount DESC")
+  @JsonIgnore
+  private List<Post> posts = new ArrayList<>();
+
+
   @ManyToMany(mappedBy = "userLikes",
           cascade = {MERGE, DETACH, REFRESH})
   @JsonIgnore
   private List<Post> postLikes = new ArrayList<>();
+
 
   @ManyToMany(mappedBy = "userDislikes",
           cascade = {MERGE, DETACH, REFRESH})

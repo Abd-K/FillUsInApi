@@ -48,15 +48,14 @@ public class UserService implements UserDetailsService {
       User newUser = new User();
       newUser.setUsername(createUserDto.getUsername());
       newUser.setPassword(passwordEncoder.encode(createUserDto.getPassword()));
-
-      authenticateUser(newUser.getUsername(), newUser.getPassword());
-
-      return userRepository.save(newUser);
+      Authentication authentication = new UsernamePasswordAuthenticationToken(createUserDto.getUsername(), createUserDto.getPassword());
+      SecurityContextHolder.getContext().setAuthentication(authentication);
+      return userRepository.saveAndFlush(newUser);
     }
   }
 
-  private void authenticateUser(String newUser, String newUser1) {
-    Authentication authenticatedToken = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(newUser, newUser1));
+  private void authenticateUser(String username, String password) {
+    Authentication authenticatedToken = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
     SecurityContextHolder.getContext().setAuthentication(authenticatedToken);
   }
 
@@ -68,6 +67,13 @@ public class UserService implements UserDetailsService {
       throw new Exception("Username or password incorrect");
     }
     return getUser(loginDto.getUsername());
+  }
+
+  public void logout() {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (auth != null) {
+      SecurityContextHolder.getContext().setAuthentication(null);
+    }
   }
 
   private boolean usernameExists(String username) {

@@ -48,7 +48,7 @@ public class PostService {
     String url = createPostDto.getUrl();
     post.setUrl(url);
     post.setThumbnailUrl(ExtractThumbnail(url));
-    post.setUsername(createPostDto.getUsername());
+    post.setUser(fetchUser());
     return postRepository.save(post);
   }
 
@@ -81,10 +81,7 @@ public class PostService {
   }
 
   public Post likePost(String postId) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String currentUsername = authentication.getName(); // This will give you the username
-
-    User currentUser = userService.getUser(currentUsername);
+    User currentUser = fetchUser();
     Post post = getPostById(postId);
 
     if (!post.getUserLikes().contains(currentUser)) {
@@ -97,9 +94,7 @@ public class PostService {
   }
 
   public Post dislikePost(String postId) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String currentUsername = authentication.getName(); // This will give you the username
-    User currentUser = userService.getUser(currentUsername);
+    User currentUser = fetchUser();
 
     Post post = getPostById(postId);
     if (!post.getUserDislikes().contains(currentUser)) {
@@ -110,6 +105,13 @@ public class PostService {
 
     postRepository.saveAndFlush(post);
     return post;
+  }
+
+  private User fetchUser() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String currentUsername = authentication.getName();
+    User currentUser = userService.getUser(currentUsername);
+    return currentUser;
   }
 
   private int calculateVoteCount(Post post) {

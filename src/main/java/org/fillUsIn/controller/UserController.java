@@ -32,6 +32,13 @@ public class UserController {
     return new ResponseEntity<>(user, HttpStatus.ACCEPTED);
   }
 
+  @PostMapping("/logout")
+  @ResponseStatus(HttpStatus.ACCEPTED)
+  public ResponseEntity<User> logout() {
+    userService.logout();
+    return new ResponseEntity<>(HttpStatus.ACCEPTED);
+  }
+
   @PostMapping("")
   @ResponseStatus(HttpStatus.CREATED)
   public User createPost(@Validated @RequestBody CreateUserDto createUserDto) throws Exception {

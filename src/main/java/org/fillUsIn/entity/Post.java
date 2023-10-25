@@ -44,11 +44,14 @@ public class Post {
   @Column(name = "updatedDate")
   private LocalDateTime updatedDate;
 
-  private String username;
+  @ManyToOne
+  @JoinColumn(nullable = false)
+  @JsonIgnore
+  private User user;
 
   @ManyToOne
-  @JsonIgnore
   @JoinColumn(nullable = false)
+  @JsonIgnore
   private Subcategory subcategory;
   private String url;
   private String thumbnailUrl;
