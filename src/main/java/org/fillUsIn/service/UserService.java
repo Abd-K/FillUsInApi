@@ -1,8 +1,8 @@
 package org.fillUsIn.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.fillUsIn.dto.CreateUserDto;
-import org.fillUsIn.dto.LoginDto;
+import org.fillUsIn.dto.CreateUserDTO;
+import org.fillUsIn.dto.LoginDTO;
 import org.fillUsIn.entity.User;
 import org.fillUsIn.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -41,7 +41,7 @@ public class UserService implements UserDetailsService {
     return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), new ArrayList<>());
   }
 
-  public User createUser(CreateUserDto createUserDto) throws Exception {
+  public User createUser(CreateUserDTO createUserDto) throws Exception {
     if(usernameExists(createUserDto.getUsername())) {
       throw new Exception("Username already exists");
     } else {
@@ -59,7 +59,7 @@ public class UserService implements UserDetailsService {
     SecurityContextHolder.getContext().setAuthentication(authenticatedToken);
   }
 
-  public User login(LoginDto loginDto) throws Exception {
+  public User login(LoginDTO loginDto) throws Exception {
     try {
       authenticateUser(loginDto.getUsername(), loginDto.getPassword());
 

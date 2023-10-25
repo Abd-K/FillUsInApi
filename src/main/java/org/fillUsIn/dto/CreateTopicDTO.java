@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
-public class CreateTopicDto {
+public class CreateTopicDTO {
 
   @NotNull
   private String title;

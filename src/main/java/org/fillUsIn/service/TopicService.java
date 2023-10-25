@@ -1,9 +1,9 @@
 package org.fillUsIn.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.fillUsIn.dto.CreateTopicDto;
-import org.fillUsIn.dto.TopSubcategoryPostDto;
-import org.fillUsIn.dto.TopicWithTopPostsDto;
+import org.fillUsIn.dto.CreateTopicDTO;
+import org.fillUsIn.dto.TopSubcategoryPostDTO;
+import org.fillUsIn.dto.TopicWithTopPostsDTO;
 import org.fillUsIn.entity.Post;
 import org.fillUsIn.entity.Subcategory;
 import org.fillUsIn.entity.Topic;
@@ -28,7 +28,7 @@ public class TopicService {
     this.postService = postService;
   }
 
-  public Topic createTopic(CreateTopicDto createTopicDto) {
+  public Topic createTopic(CreateTopicDTO createTopicDto) {
     Topic topic = new Topic();
     topic.setTitle(createTopicDto.getTitle());
     for (String subcategoryName : createTopicDto.getSubcategoryNamesTopPick()) {
@@ -46,25 +46,25 @@ public class TopicService {
     return topic;
   }
 
-  public List<TopicWithTopPostsDto> getAllTopicsWithTopPosts() {
+  public List<TopicWithTopPostsDTO> getAllTopicsWithTopPosts() {
     return topicRepository.findAll().stream()
             .map(this::getTopicWithTopPosts)
             .collect(Collectors.toList());
   }
 
-  public TopicWithTopPostsDto getTopicWithTopPosts(Topic topic) {
-    List<TopSubcategoryPostDto> topSubcategoryPosts = topic.getSubcategories().stream()
+  public TopicWithTopPostsDTO getTopicWithTopPosts(Topic topic) {
+    List<TopSubcategoryPostDTO> topSubcategoryPosts = topic.getSubcategories().stream()
             .filter(subcategory -> !subcategory.getPosts().isEmpty())
-            .map(subcategory -> new TopSubcategoryPostDto(subcategory.getName(), subcategory.getPosts().get(0)))
+            .map(subcategory -> new TopSubcategoryPostDTO(subcategory.getName(), subcategory.getPosts().get(0)))
             .toList();
 
-    List<TopSubcategoryPostDto> pickedPosts = topic.getPickedPosts().stream()
-            .map(post -> new TopSubcategoryPostDto(post.getSubcategory().getName(), post)) // No subcategory name for these
+    List<TopSubcategoryPostDTO> pickedPosts = topic.getPickedPosts().stream()
+            .map(post -> new TopSubcategoryPostDTO(post.getSubcategory().getName(), post)) // No subcategory name for these
             .toList();
 
-    List<TopSubcategoryPostDto> topPosts = Stream.concat(topSubcategoryPosts.stream(), pickedPosts.stream())
+    List<TopSubcategoryPostDTO> topPosts = Stream.concat(topSubcategoryPosts.stream(), pickedPosts.stream())
             .toList();
-    return new TopicWithTopPostsDto(topic.getTitle(), topPosts);
+    return new TopicWithTopPostsDTO(topic.getTitle(), topPosts);
   }
 
 }

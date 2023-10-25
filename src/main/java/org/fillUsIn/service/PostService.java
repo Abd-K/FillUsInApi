@@ -1,7 +1,9 @@
 package org.fillUsIn.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.fillUsIn.dto.CreatePostDto;
+import org.fillUsIn.dto.CreatePostDTO;
+import org.fillUsIn.dto.PostDTO;
+import org.fillUsIn.dto.mapper.PostMapper;
 import org.fillUsIn.entity.Category;
 import org.fillUsIn.entity.Post;
 import org.fillUsIn.entity.Subcategory;
@@ -27,7 +29,10 @@ public class PostService {
   private final CategoryService categoryService;
   private final UserService userService;
 
-  public PostService(PostRepository postRepository, SubCategoryService subCategoryService, CategoryService categoryService, UserService userService) {
+  public PostService(PostRepository postRepository,
+                     SubCategoryService subCategoryService,
+                     CategoryService categoryService,
+                     UserService userService) {
     this.postRepository = postRepository;
     this.subCategoryService = subCategoryService;
     this.categoryService = categoryService;
@@ -35,11 +40,18 @@ public class PostService {
   }
 
   public Post getPostById(String postId) {
-    return postRepository.findById(postId)
-            .orElseThrow(() -> new EntityNotFoundException("Post not found with id: " + postId));
+    return postRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException("Post not found with id: " + postId));
   }
 
-  public Post createPost(String subCategoryName, CreatePostDto createPostDto) {
+  public PostDTO getPostDTOById(String postId) {
+    return convertToDto(getPostById(postId));
+  }
+
+  private PostDTO convertToDto(Post post) {
+    return PostMapper.INSTANCE.postToPostDTO(post);
+  }
+
+  public Post createPost(String subCategoryName, CreatePostDTO createPostDto) {
     final Subcategory subcategory = subCategoryService.getSubcategory(subCategoryName);
     Post post = new Post();
     post.setSubcategory(subcategory);

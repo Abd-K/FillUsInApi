@@ -1,7 +1,8 @@
 package org.fillUsIn.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.fillUsIn.dto.CreatePostDto;
+import org.fillUsIn.dto.CreatePostDTO;
+import org.fillUsIn.dto.PostDTO;
 import org.fillUsIn.entity.Post;
 import org.fillUsIn.service.PostService;
 import org.springframework.data.domain.Page;
@@ -30,7 +31,7 @@ public class PostController {
 
   @PostMapping("/subcategory/{subCategoryName}")
   @ResponseStatus(HttpStatus.CREATED)
-  public Post createPost(@PathVariable String subCategoryName, @Validated @RequestBody CreatePostDto createPostDto) {
+  public Post createPost(@PathVariable String subCategoryName, @Validated @RequestBody CreatePostDTO createPostDto) {
     return postService.createPost(subCategoryName, createPostDto);
   }
 
@@ -54,8 +55,8 @@ public class PostController {
 
   @GetMapping("/{postId}")
   @ResponseStatus(HttpStatus.ACCEPTED)
-  public Post getPost(@PathVariable String postId) {
-    return postService.getPostById(postId);
+  public PostDTO getPost(@PathVariable String postId) {
+    return postService.getPostDTOById(postId);
   }
 
   @PostMapping("/{postId}/like")

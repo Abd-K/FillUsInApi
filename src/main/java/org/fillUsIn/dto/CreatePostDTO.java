@@ -5,7 +5,7 @@ import lombok.Getter;
 import javax.validation.constraints.NotNull;
 
 @Getter
-public class CreatePostDto {
+public class CreatePostDTO {
 
   @NotNull
   private String title;
