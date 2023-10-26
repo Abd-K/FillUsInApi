@@ -31,12 +31,6 @@ public class PostController {
     this.postService = postService;
   }
 
-  @PostMapping("/subcategory/{subCategoryName}")
-  @ResponseStatus(HttpStatus.CREATED)
-  public Post createPost(@PathVariable String subCategoryName, @Validated @RequestBody CreatePostDTO createPostDto) {
-    return postService.createPost(subCategoryName, createPostDto);
-  }
-
   @GetMapping
   @ResponseStatus(HttpStatus.ACCEPTED)
   public ResponseEntity<Page<Post>> getAllPosts(@RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "10") int size) {
@@ -60,6 +54,12 @@ public class PostController {
 
     Page<Post> posts = postService.getPostsBySubcategory(subCategoryName, page, size);
     return new ResponseEntity<>(posts, HttpStatus.ACCEPTED);
+  }
+
+  @PostMapping("/subcategory/{subCategoryName}")
+  @ResponseStatus(HttpStatus.CREATED)
+  public Post createPost(@PathVariable String subCategoryName, @Validated @RequestBody CreatePostDTO createPostDto) {
+    return postService.createPost(subCategoryName, createPostDto);
   }
 
   @GetMapping("/{postId}")
