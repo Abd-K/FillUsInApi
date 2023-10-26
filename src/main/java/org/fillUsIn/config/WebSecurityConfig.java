@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -43,7 +44,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
             .and()
             .authorizeRequests()
-            .antMatchers("/users/login", "/users", "/topics").permitAll()
+            .antMatchers(HttpMethod.GET, "/categories", "/topics", "/posts","/category/{categoryName}", "/posts//subcategory/{subCategoryName}", "/posts/{postId}").permitAll()
+            .antMatchers(HttpMethod.POST, "/users/login", "/users").permitAll()
             .anyRequest().authenticated();
   }
 
