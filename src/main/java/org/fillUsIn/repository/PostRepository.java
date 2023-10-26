@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface PostRepository  extends JpaRepository<Post, String> {
     Page<Post> findBySubcategoryOrderByVoteCountDesc(Subcategory subcategory, Pageable pageable);
+    Page<Post> findAllByOrderByVoteCountDesc(Pageable pageable);
     @Query("SELECT post FROM Post post JOIN post.subcategory subcategory WHERE subcategory.category = :category ORDER BY post.voteCount DESC")
     Page<Post> findByCategoryOrderByVoteCountDesc(Category category, Pageable pageable);
 }

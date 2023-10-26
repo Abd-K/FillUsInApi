@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/posts")
 @Slf4j
@@ -33,6 +35,13 @@ public class PostController {
   @ResponseStatus(HttpStatus.CREATED)
   public Post createPost(@PathVariable String subCategoryName, @Validated @RequestBody CreatePostDTO createPostDto) {
     return postService.createPost(subCategoryName, createPostDto);
+  }
+
+  @GetMapping
+  @ResponseStatus(HttpStatus.ACCEPTED)
+  public ResponseEntity<Page<Post>> getAllPosts(@RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "10") int size) {
+    Page<Post> posts = postService.getAllPosts(page, size);
+    return new ResponseEntity<>(posts, HttpStatus.ACCEPTED);
   }
 
   @GetMapping("/category/{categoryName}")
@@ -61,7 +70,7 @@ public class PostController {
 
   @PostMapping("/{postId}/like")
   @ResponseStatus(HttpStatus.ACCEPTED)
-  public Post likePost(@PathVariable String postId) {
+  public Post likePost(@PathVariable String postId, HttpServletRequest request) {
     return postService.likePost(postId);
   }
 

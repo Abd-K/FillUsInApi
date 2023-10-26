@@ -80,16 +80,21 @@ public class PostService {
     }
   }
 
-  public Page<Post> getPostsBySubcategory(String subCategoryName, int page, int size) {
-    Subcategory subcategory = subCategoryService.getSubcategory(subCategoryName);
+  public Page<Post> getAllPosts(int page, int size) {
     PageRequest pageRequest = PageRequest.of(page, size);
-    return postRepository.findBySubcategoryOrderByVoteCountDesc(subcategory, pageRequest);
+    return postRepository.findAllByOrderByVoteCountDesc(pageRequest);
   }
 
   public Page<Post> getPostsByCategory(String categoryName, int page, int size) {
     final Category category = categoryService.getCategory(categoryName);
     PageRequest pageRequest = PageRequest.of(page, size);
     return postRepository.findByCategoryOrderByVoteCountDesc(category, pageRequest);
+  }
+
+  public Page<Post> getPostsBySubcategory(String subCategoryName, int page, int size) {
+    Subcategory subcategory = subCategoryService.getSubcategory(subCategoryName);
+    PageRequest pageRequest = PageRequest.of(page, size);
+    return postRepository.findBySubcategoryOrderByVoteCountDesc(subcategory, pageRequest);
   }
 
   public Post likePost(String postId) {

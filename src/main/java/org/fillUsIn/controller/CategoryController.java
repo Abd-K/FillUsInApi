@@ -20,10 +20,9 @@ public class CategoryController {
     this.categoryService = categoryService;
   }
 
-  @GetMapping("/")
+  @GetMapping
   @ResponseStatus(HttpStatus.ACCEPTED)
   public List<Category> getCategories() {
     return categoryService.getCategories();
   }
-
 }
