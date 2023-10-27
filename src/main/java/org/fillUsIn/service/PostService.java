@@ -1,6 +1,7 @@
 package org.fillUsIn.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.fillUsIn.dto.CreatePostDTO;
 import org.fillUsIn.dto.PostDTO;
 import org.fillUsIn.dto.mapper.PostMapper;
@@ -11,19 +12,26 @@ import org.fillUsIn.entity.User;
 import org.fillUsIn.repository.PostRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
+
 import javax.persistence.EntityNotFoundException;
-import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 
 @Service
 @Slf4j
 public class PostService {
 
+  private final WebClient webClient;
   private final PostRepository postRepository;
   private final SubCategoryService subCategoryService;
   private final CategoryService categoryService;
@@ -33,6 +41,7 @@ public class PostService {
                      SubCategoryService subCategoryService,
                      CategoryService categoryService,
                      UserService userService) {
+    this.webClient = WebClient.builder().build();
     this.postRepository = postRepository;
     this.subCategoryService = subCategoryService;
     this.categoryService = categoryService;
@@ -51,33 +60,57 @@ public class PostService {
     return PostMapper.INSTANCE.postToPostDTO(post);
   }
 
-  public Post createPost(String subCategoryName, CreatePostDTO createPostDto) {
-    final Subcategory subcategory = subCategoryService.getSubcategory(subCategoryName);
-    Post post = new Post();
-    post.setSubcategory(subcategory);
-    post.setTitle(createPostDto.getTitle());
-    post.setBody(createPostDto.getBody());
-    String url = createPostDto.getUrl();
-    post.setUrl(url);
-    post.setThumbnailUrl(ExtractThumbnail(url));
-    post.setUser(fetchUser());
-    return postRepository.save(post);
+  public Mono<Post> createPost(String subCategoryName, CreatePostDTO createPostDto) {
+    return Mono.defer(() -> {
+              final Subcategory subcategory = subCategoryService.getSubcategory(subCategoryName);
+              Post post = new Post();
+              post.setSubcategory(subcategory);
+              post.setTitle(createPostDto.getTitle());
+              post.setBody(createPostDto.getBody());
+              post.setUrl(createPostDto.getUrl());
+              post.setUser(fetchUser());
+              return Mono.just(post);
+            })
+            .publishOn(Schedulers.boundedElastic())
+            .map(postRepository::save)
+            .doOnNext(savedPost -> {
+              if (!StringUtils.isEmpty(savedPost.getUrl())) {
+                fetchThumbnailFromUrl(savedPost.getUrl())
+                        .doOnNext(thumbnail -> {
+                          savedPost.setThumbnailUrl(thumbnail);
+                          postRepository.save(savedPost);
+                        })
+                        .subscribe();
+              }
+            });
   }
 
-  private String ExtractThumbnail(String url) {
-    Document doc;
-    try {
-      doc = Jsoup.connect(url).get();
-      final Elements elements = doc.select("meta[property=og:image]");
-      if(elements.hasAttr("content")) {
-        return elements.attr("content");
-      } else {
-        return null;
-      }
+  public Mono<String> fetchThumbnailFromUrl(String url) {
+    return webClient.get()
+            .uri(url)
+            .retrieve()
+            .bodyToFlux(DataBuffer.class)  // Stream in the data
+            .map(dataBuffer -> {
+              byte[] bytes = new byte[dataBuffer.readableByteCount()];
+              dataBuffer.read(bytes);
+              DataBufferUtils.release(dataBuffer);
+              return new String(bytes, StandardCharsets.UTF_8);
+            })
+            .window(2, 1)
+            .concatMap(flux -> flux.reduce(String::concat))
+            .takeUntil(s -> s.contains("img>") || s.contains("meta>"))
+            .reduce(String::concat)
+            .map(this::parseHtmlForThumbnail)
+            .timeout(Duration.ofSeconds(10))
+            .onErrorResume(e -> {
+              log.warn("Error fetching thumbnail from {}: {}", url, e.getMessage());
+              return Mono.empty();
+            });
+  }
 
-    } catch (IOException e) {
-      return null;
-    }
+  private String parseHtmlForThumbnail(String html) {
+    Document document = Jsoup.parse(html);
+    return document.select("meta[property=og:image]").attr("content");
   }
 
   public Page<Post> getAllPosts(int page, int size) {

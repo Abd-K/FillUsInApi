@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -58,7 +59,7 @@ public class PostController {
 
   @PostMapping("/subcategory/{subCategoryName}")
   @ResponseStatus(HttpStatus.CREATED)
-  public Post createPost(@PathVariable String subCategoryName, @Validated @RequestBody CreatePostDTO createPostDto) {
+  public Mono<Post> createPost(@PathVariable String subCategoryName, @Validated @RequestBody CreatePostDTO createPostDto) {
     return postService.createPost(subCategoryName, createPostDto);
   }
 
