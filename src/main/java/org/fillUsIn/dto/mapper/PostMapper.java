@@ -11,7 +11,7 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.stream.Collectors;
 
-@Mapper
+@Mapper(uses = { CommentMapper.class })
 public interface PostMapper {
 
   PostMapper INSTANCE = Mappers.getMapper(PostMapper.class);

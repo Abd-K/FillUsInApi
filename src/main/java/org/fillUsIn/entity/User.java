@@ -54,6 +54,12 @@ public class User {
   @JsonIgnore
   private List<Post> posts = new ArrayList<>();
 
+  @OneToMany(
+          mappedBy = "user",
+          cascade = {MERGE, REFRESH},
+          fetch = FetchType.LAZY)
+  @JsonIgnore
+  private List<Comment> comments = new ArrayList<>();
 
   @ManyToMany(mappedBy = "userLikes",
           cascade = {MERGE, DETACH, REFRESH})

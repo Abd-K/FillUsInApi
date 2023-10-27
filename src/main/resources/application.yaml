@@ -1,6 +1,8 @@
 server:
   servlet:
     context-path: /fillUsIn/api
+    session:
+      timeout: 120m
   port: 8080
 
 spring:

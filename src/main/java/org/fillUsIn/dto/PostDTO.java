@@ -2,6 +2,7 @@ package org.fillUsIn.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.fillUsIn.entity.Comment;
 import org.fillUsIn.entity.User;
 
 import java.time.LocalDateTime;
@@ -22,7 +23,8 @@ public class PostDTO {
   private User user;
   private String url;
   private String thumbnailUrl;
-  private List<String> userLikesUsernames; // List of usernames who liked the post
-  private List<String> userDislikesUsernames; // List of usernames who disliked the post
+  private List<Comment> comments;
+  private List<String> userLikesUsernames;
+  private List<String> userDislikesUsernames;
 
 }

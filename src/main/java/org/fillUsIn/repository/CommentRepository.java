@@ -1,4 +1,11 @@
 package org.fillUsIn.repository;
 
-public class CommentRepository {
+import org.fillUsIn.entity.Comment;
+import org.fillUsIn.entity.Topic;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CommentRepository extends JpaRepository<Comment, String> {
+
+
 }
+

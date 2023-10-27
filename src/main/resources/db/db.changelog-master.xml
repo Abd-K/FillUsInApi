@@ -46,6 +46,15 @@
     </changeSet>
 
     <changeSet id="4" author="abdul khaled">
+        <!-- Tools -->
+        <insert tableName="subcategory">
+            <column name="category_name" value="Tools"/>
+            <column name="name" value="BDS"/>
+        </insert>
+        <insert tableName="subcategory">
+            <column name="category_name" value="Tools"/>
+            <column name="name" value="Fact check"/>
+        </insert>
         <insert tableName="subcategory">
             <column name="category_name" value="Tools"/>
             <column name="name" value="Contact MP"/>
@@ -54,13 +63,11 @@
             <column name="category_name" value="Tools"/>
             <column name="name" value="General tools"/>
         </insert>
+
+        <!-- News -->
         <insert tableName="subcategory">
-            <column name="category_name" value="Tools"/>
-            <column name="name" value="BDS"/>
-        </insert>
-        <insert tableName="subcategory">
-            <column name="category_name" value="Tools"/>
-            <column name="name" value="Fact check"/>
+            <column name="category_name" value="News"/>
+            <column name="name" value="General news"/>
         </insert>
         <insert tableName="subcategory">
             <column name="category_name" value="News"/>
@@ -76,16 +83,14 @@
         </insert>
         <insert tableName="subcategory">
             <column name="category_name" value="News"/>
-            <column name="name" value="General news"/>
-        </insert>
-        <insert tableName="subcategory">
-            <column name="category_name" value="News"/>
             <column name="name" value="Discussions"/>
         </insert>
         <insert tableName="subcategory">
             <column name="category_name" value="News"/>
             <column name="name" value="Counter arguments"/>
         </insert>
+
+        <!-- Education -->
         <insert tableName="subcategory">
             <column name="category_name" value="Education"/>
             <column name="name" value="General Education"/>
@@ -110,6 +115,8 @@
             <column name="category_name" value="Education"/>
             <column name="name" value="Podcasts"/>
         </insert>
+
+        <!-- Charities -->
         <insert tableName="subcategory">
             <column name="category_name" value="Charities"/>
             <column name="name" value="General charities"/>
