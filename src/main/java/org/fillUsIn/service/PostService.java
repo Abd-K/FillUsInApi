@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.fillUsIn.dto.CreatePostDTO;
 import org.fillUsIn.dto.PostDTO;
+import org.fillUsIn.dto.PostSummaryDTO;
 import org.fillUsIn.dto.mapper.PostMapper;
 import org.fillUsIn.entity.Category;
 import org.fillUsIn.entity.Post;
@@ -15,6 +16,7 @@ import org.jsoup.nodes.Document;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,6 +28,7 @@ import reactor.core.scheduler.Schedulers;
 import javax.persistence.EntityNotFoundException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -113,21 +116,27 @@ public class PostService {
     return document.select("meta[property=og:image]").attr("content");
   }
 
-  public Page<Post> getAllPosts(int page, int size) {
+  public Page<PostSummaryDTO> getAllPosts(int page, int size) {
     PageRequest pageRequest = PageRequest.of(page, size);
-    return postRepository.findAllByOrderByVoteCountDesc(pageRequest);
+    Page<Post> postPage = postRepository.findAllByOrderByVoteCountDesc(pageRequest);
+    List<PostSummaryDTO> postDTOs = PostMapper.INSTANCE.postsToPostSummaryDTOs(postPage.getContent());
+    return new PageImpl<>(postDTOs, pageRequest, postPage.getTotalElements());
   }
 
-  public Page<Post> getPostsByCategory(String categoryName, int page, int size) {
+  public Page<PostSummaryDTO> getPostsByCategory(String categoryName, int page, int size) {
     final Category category = categoryService.getCategory(categoryName);
     PageRequest pageRequest = PageRequest.of(page, size);
-    return postRepository.findByCategoryOrderByVoteCountDesc(category, pageRequest);
+    Page<Post> postPage = postRepository.findByCategoryOrderByVoteCountDesc(category, pageRequest);
+    List<PostSummaryDTO> postDTOs = PostMapper.INSTANCE.postsToPostSummaryDTOs(postPage.getContent());
+    return new PageImpl<>(postDTOs, pageRequest, postPage.getTotalElements());
   }
 
-  public Page<Post> getPostsBySubcategory(String subCategoryName, int page, int size) {
+  public Page<PostSummaryDTO> getPostsBySubcategory(String subCategoryName, int page, int size) {
     Subcategory subcategory = subCategoryService.getSubcategory(subCategoryName);
     PageRequest pageRequest = PageRequest.of(page, size);
-    return postRepository.findBySubcategoryOrderByVoteCountDesc(subcategory, pageRequest);
+    Page<Post> postPage = postRepository.findBySubcategoryOrderByVoteCountDesc(subcategory, pageRequest);
+    List<PostSummaryDTO> postDTOs = PostMapper.INSTANCE.postsToPostSummaryDTOs(postPage.getContent());
+    return new PageImpl<>(postDTOs, pageRequest, postPage.getTotalElements());
   }
 
   public Post likePost(String postId) {

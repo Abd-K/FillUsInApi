@@ -79,7 +79,7 @@ public class Post {
           mappedBy = "post",
           cascade = {MERGE, REFRESH, DETACH, REMOVE},
           fetch = FetchType.LAZY)
-  @JsonIgnore
+//  @JsonIgnore
   private List<Comment> comments = new ArrayList<>();
 
   @ManyToMany

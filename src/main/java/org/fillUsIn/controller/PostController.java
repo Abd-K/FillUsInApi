@@ -3,6 +3,7 @@ package org.fillUsIn.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.fillUsIn.dto.CreatePostDTO;
 import org.fillUsIn.dto.PostDTO;
+import org.fillUsIn.dto.PostSummaryDTO;
 import org.fillUsIn.entity.Post;
 import org.fillUsIn.service.PostService;
 import org.springframework.data.domain.Page;
@@ -34,26 +35,27 @@ public class PostController {
 
   @GetMapping
   @ResponseStatus(HttpStatus.ACCEPTED)
-  public ResponseEntity<Page<Post>> getAllPosts(@RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "10") int size) {
-    Page<Post> posts = postService.getAllPosts(page, size);
+  public ResponseEntity<Page<PostSummaryDTO>> getAllPosts(@RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "10") int size) {
+    Page<PostSummaryDTO> posts = postService.getAllPosts(page, size);
     return new ResponseEntity<>(posts, HttpStatus.ACCEPTED);
   }
 
   @GetMapping("/category/{categoryName}")
   @ResponseStatus(HttpStatus.ACCEPTED)
-  public ResponseEntity<Page<Post>> getPostsByCategory(@PathVariable String categoryName,
-                                                       @RequestParam(name = "page", defaultValue = "0") int page,
-                                                       @RequestParam(name = "size", defaultValue = "10") int size) {
-    Page<Post> posts = postService.getPostsByCategory(categoryName, page, size);
+  public ResponseEntity<Page<PostSummaryDTO>> getPostsByCategory(@PathVariable String categoryName,
+                                                                 @RequestParam(name = "page", defaultValue = "0") int page,
+                                                                 @RequestParam(name = "size", defaultValue = "10") int size) {
+    Page<PostSummaryDTO> posts = postService.getPostsByCategory(categoryName, page, size);
     return new ResponseEntity<>(posts, HttpStatus.ACCEPTED);
   }
 
   @GetMapping("/subcategory/{subCategoryName}")
-  public ResponseEntity<Page<Post>> getPostsBySubCategory(@PathVariable String subCategoryName,
+  public ResponseEntity<Page<PostSummaryDTO>> getPostsBySubCategory(@PathVariable String subCategoryName,
                                                           @RequestParam(name = "page", defaultValue = "0") int page,
                                                           @RequestParam(name = "size", defaultValue = "10") int size) {
 
-    Page<Post> posts = postService.getPostsBySubcategory(subCategoryName, page, size);
+    Page<PostSummaryDTO> posts = postService.getPostsBySubcategory(subCategoryName, page, size);
+
     return new ResponseEntity<>(posts, HttpStatus.ACCEPTED);
   }
 

@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class PostDTO {
+public class PostSummaryDTO {
 
   private String id;
   private String subcategoryName;
@@ -21,8 +21,5 @@ public class PostDTO {
   private String username;
   private String url;
   private String thumbnailUrl;
-  private List<Comment> comments;
-  private List<String> userLikesUsernames;
-  private List<String> userDislikesUsernames;
 
 }
