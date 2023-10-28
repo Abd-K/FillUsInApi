@@ -48,7 +48,7 @@ public class UserService implements UserDetailsService {
     return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), new ArrayList<>());
   }
 
-  public User createUser(CreateUserDTO createUserDto) throws Exception {
+  public User createUser(CreateUserDTO createUserDto) {
     if(usernameExists(createUserDto.getUsername())) {
       throw new UsernameExistsException("Username already exists");
     } else if (emailExists(createUserDto.getEmail())) {

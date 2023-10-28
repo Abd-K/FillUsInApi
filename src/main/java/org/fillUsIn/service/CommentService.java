@@ -37,14 +37,13 @@ public class CommentService {
     Comment comment = new Comment();
     if(createCommentDTO.getParentPostId() != null && !createCommentDTO.getParentPostId().equals("")) {
       parentPost = postService.getPostById(createCommentDTO.getParentPostId());
+      comment.setPost(parentPost);
     } else if(createCommentDTO.getParentCommentId() != null) {
       parentComment = getCommentById(createCommentDTO.getParentCommentId());
       comment.setParentComment(parentComment);
-      parentPost = parentComment.getPost();
     } else {
       throw new IllegalArgumentException("Missing postId or Comment Id");
     }
-    comment.setPost(parentPost);
     comment.setBody(createCommentDTO.getBody());
     comment.setUser(fetchUser());
     return commentRepository.save(comment);

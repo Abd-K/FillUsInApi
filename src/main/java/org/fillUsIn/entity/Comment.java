@@ -48,7 +48,7 @@ public class Comment {
   private User user;
 
   @ManyToOne
-  @JoinColumn(nullable = false)
+  @JoinColumn
   @JsonIgnore
   private Post post;
 
