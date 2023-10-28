@@ -3,8 +3,11 @@ package org.fillUsIn.service;
 import lombok.extern.slf4j.Slf4j;
 import org.fillUsIn.dto.CreateUserDTO;
 import org.fillUsIn.dto.LoginDTO;
+import org.fillUsIn.dto.UserDTO;
+import org.fillUsIn.dto.mapper.UserMapper;
 import org.fillUsIn.entity.User;
 import org.fillUsIn.repository.UserRepository;
+import org.fillUsIn.security.JwtUtil;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,12 +29,14 @@ public class UserService implements UserDetailsService {
 
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
+  private final JwtUtil jwtUtil;
   private final AuthenticationManager authenticationManager;
 
 
-  public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+  public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
+    this.jwtUtil = jwtUtil;
     this.authenticationManager = authenticationManager;
   }
 
@@ -48,25 +53,21 @@ public class UserService implements UserDetailsService {
       User newUser = new User();
       newUser.setUsername(createUserDto.getUsername());
       newUser.setPassword(passwordEncoder.encode(createUserDto.getPassword()));
-      Authentication authentication = new UsernamePasswordAuthenticationToken(createUserDto.getUsername(), createUserDto.getPassword());
-      SecurityContextHolder.getContext().setAuthentication(authentication);
       return userRepository.saveAndFlush(newUser);
     }
   }
 
-  private void authenticateUser(String username, String password) {
-    Authentication authenticatedToken = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-    SecurityContextHolder.getContext().setAuthentication(authenticatedToken);
-  }
-
-  public User login(LoginDTO loginDto) throws Exception {
+  public String login(LoginDTO loginDto) throws Exception {
     try {
-      authenticateUser(loginDto.getUsername(), loginDto.getPassword());
-
+      authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
+      return jwtUtil.generateJwtToken(loginDto.getUsername());
     } catch (BadCredentialsException e) {
       throw new Exception("Username or password incorrect");
     }
-    return getUser(loginDto.getUsername());
+  }
+
+  public UserDTO convertToDto(User user) {
+    return UserMapper.INSTANCE.userToUserDTO(user);
   }
 
   public void logout() {

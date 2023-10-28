@@ -1,6 +1,7 @@
 package org.fillUsIn.config;
 
 
+import org.fillUsIn.filter.JwtRequestFilter;
 import org.fillUsIn.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -41,12 +43,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .cors()
             .and()
             .csrf().disable()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
+            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
             .authorizeRequests()
             .antMatchers(HttpMethod.GET, "/categories", "/topics", "/posts","/posts/category/{categoryName}", "/posts/subcategory/{subCategoryName}", "/posts/{postId}").permitAll()
-            .antMatchers(HttpMethod.POST, "/users/login", "/users").permitAll()
+            .antMatchers(HttpMethod.POST, "/users/login", "/users", "/users/logout").permitAll()
+            .antMatchers(HttpMethod.POST, "/posts/subcategory/{subCategoryName}").authenticated()
             .anyRequest().authenticated();
+  }
+
+  @Bean
+  public JwtRequestFilter jwtAuthenticationFilter() {
+    return new JwtRequestFilter();
   }
 
   @Bean
