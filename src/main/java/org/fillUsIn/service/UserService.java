@@ -6,6 +6,8 @@ import org.fillUsIn.dto.LoginDTO;
 import org.fillUsIn.dto.UserDTO;
 import org.fillUsIn.dto.mapper.UserMapper;
 import org.fillUsIn.entity.User;
+import org.fillUsIn.exception.EmailExistsException;
+import org.fillUsIn.exception.UsernameExistsException;
 import org.fillUsIn.repository.UserRepository;
 import org.fillUsIn.security.JwtUtil;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -48,10 +50,14 @@ public class UserService implements UserDetailsService {
 
   public User createUser(CreateUserDTO createUserDto) throws Exception {
     if(usernameExists(createUserDto.getUsername())) {
-      throw new Exception("Username already exists");
-    } else {
+      throw new UsernameExistsException("Username already exists");
+    } else if (emailExists(createUserDto.getEmail())) {
+      throw new EmailExistsException("Email already exists");
+    }
+    else {
       User newUser = new User();
       newUser.setUsername(createUserDto.getUsername());
+      newUser.setEmail(createUserDto.getEmail());
       newUser.setPassword(passwordEncoder.encode(createUserDto.getPassword()));
       return userRepository.saveAndFlush(newUser);
     }
@@ -81,9 +87,17 @@ public class UserService implements UserDetailsService {
     return getByUsername(username).isPresent();
   }
 
+    private boolean emailExists(String email) {
+      return getByEmail(email).isPresent();
+    }
+
   public User getUser(String username) {
     return getByUsername(username)
             .orElseThrow(() -> new EntityNotFoundException("User not found with username: " + username));
+  }
+
+  private Optional<User> getByEmail(String email) {
+    return userRepository.findByEmail(email);
   }
 
   private Optional<User> getByUsername(String username) {

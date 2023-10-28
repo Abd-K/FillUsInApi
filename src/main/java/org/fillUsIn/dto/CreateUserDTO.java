@@ -13,6 +13,10 @@ public class CreateUserDTO {
   @Size(min = 3, max = 50)
   private String username;
 
+
+  @NotNull
+  private String email;
+
   @NotNull
   @Size(min = 8, max = 50)
   private String password;

@@ -32,6 +32,9 @@ public class User {
   @Column(name = "username", nullable = false, unique = true)
   private String username;
 
+  @Column(name = "email", unique = true)
+  private String email;
+
   @CreationTimestamp
   @Column(nullable = false, updatable = false)
   private LocalDateTime createdAt;
