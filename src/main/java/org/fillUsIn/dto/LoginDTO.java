@@ -1,13 +1,13 @@
 package org.fillUsIn.dto;
 
-import lombok.Getter;
+import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 
-@Getter
+@Data
 public class LoginDTO {
   @NotNull
-  private String username;
+  private String email;
   @NotNull
   private String password;
 }

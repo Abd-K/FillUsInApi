@@ -168,8 +168,8 @@ public class PostService {
 
   private User fetchUser() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String currentUsername = authentication.getName();
-    User currentUser = userService.getUser(currentUsername);
+    String currentEmail = authentication.getName();
+    User currentUser = userService.getUser(currentEmail);
     return currentUser;
   }
 

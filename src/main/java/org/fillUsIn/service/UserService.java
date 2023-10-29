@@ -43,9 +43,9 @@ public class UserService implements UserDetailsService {
   }
 
   @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    User user = getUser(username);
-    return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), new ArrayList<>());
+  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    User user = getUser(email);
+    return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), new ArrayList<>());
   }
 
   public User createUser(CreateUserDTO createUserDto) {
@@ -65,8 +65,8 @@ public class UserService implements UserDetailsService {
 
   public String login(LoginDTO loginDto) throws Exception {
     try {
-      authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
-      return jwtUtil.generateJwtToken(loginDto.getUsername());
+      authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
+      return jwtUtil.generateJwtToken(loginDto.getEmail());
     } catch (BadCredentialsException e) {
       throw new Exception("Username or password incorrect");
     }
@@ -91,9 +91,9 @@ public class UserService implements UserDetailsService {
       return getByEmail(email).isPresent();
     }
 
-  public User getUser(String username) {
-    return getByUsername(username)
-            .orElseThrow(() -> new EntityNotFoundException("User not found with username: " + username));
+  public User getUser(String email) {
+    return getByEmail(email)
+            .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
   }
 
   private Optional<User> getByEmail(String email) {

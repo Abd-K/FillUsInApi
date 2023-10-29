@@ -78,8 +78,8 @@ public class CommentService {
 
   private User fetchUser() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String currentUsername = authentication.getName();
-    return userService.getUser(currentUsername);
+    String currentEmail = authentication.getName();
+    return userService.getUser(currentEmail);
   }
 
   private int calculateVoteCount(Comment comment) {
