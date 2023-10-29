@@ -32,6 +32,9 @@ public class Subcategory {
   @Column(nullable = false, unique = true)
   private String name;
 
+  private String thumbnailUrl;
+  private String description;
+
   @OneToMany(
           mappedBy = "subcategory",
           cascade = {MERGE, DETACH, REFRESH},
