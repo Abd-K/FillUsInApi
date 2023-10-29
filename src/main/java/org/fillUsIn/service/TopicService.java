@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.fillUsIn.dto.CreateTopicDTO;
 import org.fillUsIn.dto.TopSubcategoryPostDTO;
 import org.fillUsIn.dto.TopicWithTopPostsDTO;
+import org.fillUsIn.dto.mapper.PostMapper;
 import org.fillUsIn.entity.Post;
 import org.fillUsIn.entity.Subcategory;
 import org.fillUsIn.entity.Topic;
@@ -55,11 +56,11 @@ public class TopicService {
   public TopicWithTopPostsDTO getTopicWithTopPosts(Topic topic) {
     List<TopSubcategoryPostDTO> topSubcategoryPosts = topic.getSubcategories().stream()
             .filter(subcategory -> !subcategory.getPosts().isEmpty())
-            .map(subcategory -> new TopSubcategoryPostDTO(subcategory.getName(), subcategory.getPosts().get(0)))
+            .map(subcategory -> new TopSubcategoryPostDTO( subcategory.getCategory().getName(), subcategory.getName(), PostMapper.INSTANCE.postToPostSummaryDTO(subcategory.getPosts().get(0))))
             .toList();
 
     List<TopSubcategoryPostDTO> pickedPosts = topic.getPickedPosts().stream()
-            .map(post -> new TopSubcategoryPostDTO(post.getSubcategory().getName(), post)) // No subcategory name for these
+            .map(post -> new TopSubcategoryPostDTO(post.getSubcategory().getCategory().getName(), post.getSubcategory().getName(), PostMapper.INSTANCE.postToPostSummaryDTO(post))) // No subcategory name for these
             .toList();
 
     List<TopSubcategoryPostDTO> topPosts = Stream.concat(topSubcategoryPosts.stream(), pickedPosts.stream())

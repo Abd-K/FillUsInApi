@@ -9,6 +9,7 @@ import org.fillUsIn.entity.Post;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TopSubcategoryPostDTO {
+  private String categoryName;
   private String subcategoryName;
-  private Post post;
+  private PostSummaryDTO post;
 }
