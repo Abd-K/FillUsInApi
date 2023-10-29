@@ -50,13 +50,13 @@
         <insert tableName="subcategory">
             <column name="category_name" value="Tools"/>
             <column name="name" value="BDS"/>
-            <column name="description" value="BDS"/>
-            <column name="thumbnailUrl" value="https://pbs.twimg.com/profile_images/868522246792372224/Y85gQgTs_400x400.jpg"/>
+<!--            <column name="description" value="BDS"/>-->
+<!--            <column name="thumbnailUrl" value="https://pbs.twimg.com/profile_images/868522246792372224/Y85gQgTs_400x400.jpg"/>-->
         </insert>
         <insert tableName="subcategory">
             <column name="category_name" value="Tools"/>
             <column name="name" value="Fact check"/>
-            <column name="thumbnailUrl" value="BDS"/>
+<!--            <column name="thumbnailUrl" value="BDS"/>-->
 
         </insert>
         <insert tableName="subcategory">
