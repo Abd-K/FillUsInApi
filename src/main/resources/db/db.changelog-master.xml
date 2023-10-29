@@ -55,9 +55,8 @@
         </insert>
         <insert tableName="subcategory">
             <column name="category_name" value="Tools"/>
-            <column name="name" value="Fact check"/>
+            <column name="name" value="Fact Check"/>
 <!--            <column name="thumbnailUrl" value="BDS"/>-->
-
         </insert>
         <insert tableName="subcategory">
             <column name="category_name" value="Tools"/>
@@ -65,25 +64,21 @@
         </insert>
         <insert tableName="subcategory">
             <column name="category_name" value="Tools"/>
-            <column name="name" value="General tools"/>
+            <column name="name" value="General Tools"/>
         </insert>
 
         <!-- News -->
         <insert tableName="subcategory">
             <column name="category_name" value="News"/>
-            <column name="name" value="General news"/>
+            <column name="name" value="Updates"/>
         </insert>
         <insert tableName="subcategory">
             <column name="category_name" value="News"/>
-            <column name="name" value="Fake news"/>
+            <column name="name" value="Fake News"/>
         </insert>
         <insert tableName="subcategory">
             <column name="category_name" value="News"/>
-            <column name="name" value="Journalism"/>
-        </insert>
-        <insert tableName="subcategory">
-            <column name="category_name" value="News"/>
-            <column name="name" value="New"/>
+            <column name="name" value="Counter Arguments"/>
         </insert>
         <insert tableName="subcategory">
             <column name="category_name" value="News"/>
@@ -91,7 +86,7 @@
         </insert>
         <insert tableName="subcategory">
             <column name="category_name" value="News"/>
-            <column name="name" value="Counter arguments"/>
+            <column name="name" value="General News"/>
         </insert>
 
         <!-- Education -->
@@ -123,15 +118,19 @@
         <!-- Charities -->
         <insert tableName="subcategory">
             <column name="category_name" value="Charities"/>
-            <column name="name" value="General charities"/>
+            <column name="name" value="General Charities"/>
         </insert>
         <insert tableName="subcategory">
             <column name="category_name" value="Charities"/>
-            <column name="name" value="UK"/>
+            <column name="name" value="On The Ground"/>
         </insert>
-        <insert tableName="subcategory">
-            <column name="category_name" value="Charities"/>
-            <column name="name" value="USA"/>
-        </insert>
+<!--        <insert tableName="subcategory">-->
+<!--            <column name="category_name" value="Charities"/>-->
+<!--            <column name="name" value="UK"/>-->
+<!--        </insert>-->
+<!--        <insert tableName="subcategory">-->
+<!--            <column name="category_name" value="Charities"/>-->
+<!--            <column name="name" value="USA"/>-->
+<!--        </insert>-->
     </changeSet>
 </databaseChangeLog>
