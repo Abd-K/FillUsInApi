@@ -15,6 +15,7 @@ import java.util.List;
 
 import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
 
 @Entity
@@ -31,11 +32,11 @@ public class Topic {
   private String title;
 
   @ManyToMany(mappedBy = "topics",
-          cascade = {MERGE, DETACH, REFRESH})
+          cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private List<Subcategory> subcategories = new ArrayList<>();
 
   @ManyToMany(mappedBy = "topics",
-          cascade = {MERGE, DETACH, REFRESH})
+          cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private List<Post> pickedPosts = new ArrayList<>();
 
 }

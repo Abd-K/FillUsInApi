@@ -28,6 +28,7 @@ import java.util.List;
 
 import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.CascadeType.REMOVE;
 
@@ -66,7 +67,9 @@ public class Post {
   private String url;
   private String thumbnailUrl;
 
-  @ManyToMany
+  @ManyToMany(
+          cascade = {MERGE, REFRESH, DETACH, PERSIST}
+  )
   @JsonIgnore
   @JoinTable(
           name = "post_topic",
