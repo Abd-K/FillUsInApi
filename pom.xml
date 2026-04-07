@@ -20,7 +20,7 @@
         <cucumber.version>7.2.3</cucumber.version>
         <lombok.version>1.18.26</lombok.version>
         <jupiter.version>5.9.2</jupiter.version>
-        <jsoup.version>1.10.2</jsoup.version>
+        <jsoup.version>1.15.3</jsoup.version>
         <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
 
     </properties>
